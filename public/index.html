@@ -12,29 +12,32 @@
   <div class="form">
     <div class="form-item">
       <span class="label">access-key-id:</span>
-      <input class="input" type="password" id="alioss-access-key-id" />
+      <input class="input" type="password" id="alioss-access-key-id" disabled />
     </div>
     <div class="form-item">
       <span class="label">access-key-secret:</span>
-      <input class="input" type="password" id="alioss-access-key-secret" />
+      <input class="input" type="password" id="alioss-access-key-secret" disabled />
     </div>
     <div class="form-item">
       <span class="label">bucket:</span>
-      <input class="input" type="text" id="alioss-bucket" />
+      <input class="input" type="text" id="alioss-bucket" disabled />
     </div>
     <div class="form-item">
       <span class="label">region:</span>
-      <input class="input" type="text" id="alioss-region" />
+      <input class="input" type="text" id="alioss-region" disabled />
     </div>
     <div class="form-item">
       <span class="label">dest-path:</span>
-      <input class="input" type="text" id="alioss-dest-path" />
+      <input class="input" type="text" id="alioss-dest-path" disabled />
     </div>
     <div class="form-item">
       <span class="label"></span>
       <div class="btn-groups">
-        <button class="" id="alioss-push">PUSH</button>
-        <button class="" id="alioss-pull">PULL</button>
+        <button class="blue" id="alioss-edit">EDIT</button>
+        <button class="hide green" id="alioss-save">SAVE</button>
+        <button class="hide grey" id="alioss-cancel">CANCEL</button>
+        <button class="yellow" id="alioss-push">PUSH</button>
+        <button class="green" id="alioss-pull">PULL</button>
       </div>
     </div>
   </div>

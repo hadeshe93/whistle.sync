@@ -5,8 +5,20 @@ input {
   border: 1px solid #d0d0d0;
   outline: none
 }
-.btn-groups > button:not(:first-child) {
-  margin-left: 20px;
+button:hover {
+  cursor: pointer;
+}
+.hide {
+  display: none;
+}
+.blue {
+  background-color: cornflowerblue;
+}
+.green {
+  background-color: limegreen;
+}
+.yellow {
+  background-color: gold;
 }
 
 .form {
@@ -16,11 +28,28 @@ input {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 .form-item .label {
   width: 200px;
 }
 .form-item .input {
   width: 200px;
+}
+.btn-groups {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.btn-groups > button {
+  box-sizing: border-box;
+  border: none;
+  border-radius: 6px;;
+  padding: 0;
+  width: 80px;
+  height: 26px;
+  line-height: 26px;
+}
+.btn-groups > button:not(:last-child) {
+  margin-right: 20px;
 }

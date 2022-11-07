@@ -12,4 +12,8 @@ declare global {
     class Socks extends Socket {}
     type UrlQuery = ParsedUrlQuery;
   }
+
+  interface ParameterizedContext {
+    whistleOptions: Whistle.PluginOptions;
+  }
 }

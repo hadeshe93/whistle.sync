@@ -1,0 +1,26 @@
+body, h1, h2, h3, h4, h5, h6, form, input {
+  color: #333;
+}
+input {
+  border: 1px solid #d0d0d0;
+  outline: none
+}
+.btn-groups > button:not(:first-child) {
+  margin-left: 20px;
+}
+
+.form {
+  padding-left: 20px;
+}
+.form-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.form-item .label {
+  width: 200px;
+}
+.form-item .input {
+  width: 200px;
+}

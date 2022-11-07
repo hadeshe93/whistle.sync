@@ -5,8 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Whistle 配置同步插件</title>
+  <link rel="stylesheet" href="./index.css">
 </head>
 <body>
   <h3>Whistle 配置同步插件</h3>
+  <div class="form">
+    <div class="form-item">
+      <span class="label">access-key-id:</span>
+      <input class="input" type="password" id="alioss-access-key-id" />
+    </div>
+    <div class="form-item">
+      <span class="label">access-key-secret:</span>
+      <input class="input" type="password" id="alioss-access-key-secret" />
+    </div>
+    <div class="form-item">
+      <span class="label">bucket:</span>
+      <input class="input" type="text" id="alioss-bucket" />
+    </div>
+    <div class="form-item">
+      <span class="label">region:</span>
+      <input class="input" type="text" id="alioss-region" />
+    </div>
+    <div class="form-item">
+      <span class="label">dest-path:</span>
+      <input class="input" type="text" id="alioss-dest-path" />
+    </div>
+    <div class="form-item">
+      <span class="label"></span>
+      <div class="btn-groups">
+        <button class="" id="alioss-push">PUSH</button>
+        <button class="" id="alioss-pull">PULL</button>
+      </div>
+    </div>
+  </div>
+  <script src="./index.js"></script>
 </body>
 </html>

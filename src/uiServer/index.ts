@@ -12,9 +12,11 @@ export default (server: Whistle.PluginServer, options: Whistle.PluginOptions) =>
   const app = new Koa();
   app.proxy = true;
   app.silent = true;
+  // 注入 whistle 的 options
+  app.context.whistleOptions = options;
   onerror(app);
   const router = new Router();
-  setupRouter(router);
+  setupRouter(router, options);
   app.use(bodyParser());
   app.use(router.routes());
   app.use(router.allowedMethods());

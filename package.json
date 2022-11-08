@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc",
-    "postinstall": "tsc"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/ali-oss": "^6.16.6",

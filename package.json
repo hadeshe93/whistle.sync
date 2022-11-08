@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "description": "",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "postinstall": "tsc"
   },
   "devDependencies": {
     "@types/ali-oss": "^6.16.6",

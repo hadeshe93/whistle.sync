@@ -14,6 +14,11 @@ interface ExportAllRulesResult {
   [key: string]: string;
 }
 
+interface ImportAllRulesResult {
+  ec: number;
+  [key: string]: any;
+}
+
 export const fetchRulesList = async (hostname: string): Promise<FetchRulesListResult> => request(`http://${hostname}/cgi-bin/rules/list`);
 
 // 按 whistle 的导出能力复刻的接口
@@ -29,7 +34,7 @@ export const exportAllRules = async (hostname: string): Promise<ExportAllRulesRe
 };
 
 // 按 whistle 的导入能力复刻的接口
-export const importAllRules = (hostname: string, configs: AxiosRequestConfig) => {
+export const importAllRules = (hostname: string, configs: AxiosRequestConfig): Promise<ImportAllRulesResult> => {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     const { data } = configs;
@@ -51,7 +56,13 @@ export const importAllRules = (hostname: string, configs: AxiosRequestConfig) =>
           buf = buf.concat(chunks);
         });
         res.on('end', () => {
-          resolve(buf.toString());
+          let result = buf.toString();
+          try {
+            result = JSON.parse(result);
+          } catch (err) {
+          } finally {
+            resolve(result as any);
+          }
         });
       }
     });

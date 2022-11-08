@@ -3,6 +3,7 @@ import { Context, Next } from 'koa';
 import { CODE_SUCCESS, CODE_ERR_UNKNOWN } from '../../constants/code';
 import { fetchInit } from '../../services/base';
 import { exportAllRules, importAllRules } from '../../services/rules';
+import { exportAllValues, importAllValues } from '../../services/values';
 import { pushToAliOss, pullFromAliOss } from '../../services/alioss';
 
 export default async (ctx: Context, next: Next) => {
@@ -22,6 +23,7 @@ export default async (ctx: Context, next: Next) => {
   let result;
   if (op === 'push') {
     const allRules = await exportAllRules(hostname);
+    const allValues = await exportAllValues(hostname);
     result = await pushToAliOss({
       accessKeyId,
       accessKeySecret,
@@ -30,6 +32,9 @@ export default async (ctx: Context, next: Next) => {
       payloadPairs: [{
         local: Buffer.from(JSON.stringify(allRules)),
         dest: path.resolve(destPath, 'rules.json'),
+      }, {
+        local: Buffer.from(JSON.stringify(allValues)),
+        dest: path.resolve(destPath, 'values.json'),
       }],
     });
   } else if (op === 'pull') {
@@ -41,13 +46,17 @@ export default async (ctx: Context, next: Next) => {
       payloadPairs: [{
         local: null,
         dest: path.resolve(destPath, 'rules.json'),
+      }, {
+        local: null,
+        dest: path.resolve(destPath, 'values.json'),
       }],
     });
-    const rulesStr = pullResult.data?.[0];
+    const [rulesStr, valuesStr] = pullResult.data;
     const rulesJSON = JSON.parse(rulesStr);
+    const valuesJSON = JSON.parse(valuesStr);
     try {
       const { clientId = '' } = await fetchInit(hostname);
-      const importResult = await importAllRules(hostname, {
+      const importRulesResult = await importAllRules(hostname, {
         params: {
           clientId,
         },
@@ -56,10 +65,22 @@ export default async (ctx: Context, next: Next) => {
           replaceAll: 1,
         },
       });
+      const importValuesResult = await importAllValues(hostname, {
+        params: {
+          clientId,
+        },
+        data: {
+          rules: valuesJSON,
+          replaceAll: 1,
+        },
+      });
+      const isSuccess = importRulesResult.ec === 0 && importValuesResult.ec === 0;
+      const code = isSuccess ? CODE_SUCCESS : CODE_ERR_UNKNOWN;
+      const msg = isSuccess ? '' : '同步失败';
       result = {
-        code: CODE_SUCCESS,
-        msg: '',
-        data: importResult,
+        code,
+        msg,
+        data: isSuccess ? null : [importRulesResult, importValuesResult],
       };
     } catch (err) {
       result = {

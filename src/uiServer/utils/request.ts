@@ -8,6 +8,7 @@ request.interceptors.response.use(async (response) => {
   if (response.status > 400) throw response;
   return response.data
 }, async (error) => {
+  console.error('请求异常：', error);
   throw error;
 });
 

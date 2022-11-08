@@ -122,6 +122,23 @@
       }
     }, false);
 
+    // 拉取按钮
+    $pullBtn.addEventListener('click', async function(){
+      const theAliossConfig = getConfigs();
+      const { data: rsp, msg } = await request({
+        url: '/plugin.sync/cgi-bin/sync',
+        data: {
+          op: 'pull',
+          ...theAliossConfig,
+        },
+      });
+      if (rsp.code === 0) {
+        window.alert('PULL 成功');
+      } else {
+        window.alert(`PULL 失败，${msg}`);
+      }
+    }, false);
+
     // 编辑按钮
     $editBtn.addEventListener('click', function () {
       stashConfigs();

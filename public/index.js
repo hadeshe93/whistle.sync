@@ -12,6 +12,11 @@
   const $pushBtn = document.querySelector('#alioss-push');
   const $pullBtn = document.querySelector('#alioss-pull');
 
+  const $clearRulesBtn = document.querySelector('#alioss-clear-rules');
+  const $clearValuesBtn = document.querySelector('#alioss-clear-values');
+
+  const getWhistlePageId = window.top.getWhistlePageId.bind(window.top);
+
   // 请求同步接口
   function request({ url, data }) {
     return new Promise((resolve, reject) => {
@@ -112,6 +117,7 @@
         url: '/plugin.sync/cgi-bin/sync',
         data: {
           op: 'push',
+          pageId: getWhistlePageId(),
           ...theAliossConfig,
         },
       });
@@ -129,6 +135,7 @@
         url: '/plugin.sync/cgi-bin/sync',
         data: {
           op: 'pull',
+          pageId: getWhistlePageId(),
           ...theAliossConfig,
         },
       });
@@ -155,6 +162,38 @@
     $cancelBtn.addEventListener('click', function () {
       restoreConfigs();
       toggleFormEnable(false);
+    }, false);
+
+    // 清空 rules 按钮
+    $clearRulesBtn.addEventListener('click', async function () {
+      const { data: rsp, msg } = await request({
+        url: '/plugin.sync/cgi-bin/clear',
+        data: {
+          pageId: getWhistlePageId(),
+          target: 'rules',
+        },
+      });
+      if (rsp.code === 0) {
+        window.alert('CLEAR 成功');
+      } else {
+        window.alert(`CLEAR 失败，${msg}`);
+      }
+    }, false);
+
+    // 清空 values 按钮
+    $clearValuesBtn.addEventListener('click', async function () {
+      const { data: rsp, msg } = await request({
+        url: '/plugin.sync/cgi-bin/clear',
+        data: {
+          pageId: getWhistlePageId(),
+          target: 'values',
+        },
+      });
+      if (rsp.code === 0) {
+        window.alert('CLEAR 成功');
+      } else {
+        window.alert(`CLEAR 失败，${msg}`);
+      }
     }, false);
   }
 

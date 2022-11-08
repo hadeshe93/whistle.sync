@@ -1,6 +1,13 @@
-import { request } from "../utils/request";
-import { AxiosRequestConfig } from 'axios';
 import FormData from 'form-data';
+import { AxiosRequestConfig } from 'axios';
+
+import { request } from "../utils/request";
+import { fetchInit } from './base';
+
+interface CallWhistleCgiOptions {
+  hostname: string;
+  clientId?: string;
+}
 
 interface FetchRulesListResult {
   defaultRules: string;
@@ -19,11 +26,36 @@ interface ImportAllRulesResult {
   [key: string]: any;
 }
 
-export const fetchRulesList = async (hostname: string): Promise<FetchRulesListResult> => request(`http://${hostname}/cgi-bin/rules/list`);
+export const fetchRulesList = async (options: CallWhistleCgiOptions): Promise<FetchRulesListResult> => request(`http://${options.hostname}/cgi-bin/rules/list`);
+export const removeRule = async (options: CallWhistleCgiOptions, config: AxiosRequestConfig): Promise<any> => request({
+  url: `http://${options.hostname}/cgi-bin/rules/remove`,
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  },
+  ...config,
+});
+
+// 清空所有 rules
+export const clearAllRules = async (options: CallWhistleCgiOptions): Promise<any> => {
+  const { clientId } = options;
+  const rulesRes = await fetchRulesList(options);
+  const { list: rules } = rulesRes;
+  return await Promise.all(rules.map(rule => {
+    const data = {
+      clientId,
+      name: rule.name,
+      // wholeGroup: 1,
+    };
+    return removeRule(options, {
+      data,
+    })
+  }))
+};
 
 // 按 whistle 的导出能力复刻的接口
-export const exportAllRules = async (hostname: string): Promise<ExportAllRulesResult> => {
-  const rulesRes = await fetchRulesList(hostname);
+export const exportAllRules = async (options: CallWhistleCgiOptions): Promise<ExportAllRulesResult> => {
+  const rulesRes = await fetchRulesList(options);
   const { list: rules, defaultRules } = rulesRes;
   const result: any = {};
   rules.forEach((rule: any) => {
@@ -34,7 +66,8 @@ export const exportAllRules = async (hostname: string): Promise<ExportAllRulesRe
 };
 
 // 按 whistle 的导入能力复刻的接口
-export const importAllRules = (hostname: string, configs: AxiosRequestConfig): Promise<ImportAllRulesResult> => {
+export const importAllRules = async (options: CallWhistleCgiOptions, configs: AxiosRequestConfig): Promise<ImportAllRulesResult> => {
+  const { hostname, clientId } = options;
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     const { data } = configs;
@@ -46,7 +79,7 @@ export const importAllRules = (hostname: string, configs: AxiosRequestConfig): P
     formData.submit({
       host,
       port,
-      path: `/cgi-bin/rules/import?clientId=${configs.params?.clientId || ''}`,
+      path: `/cgi-bin/rules/import?clientId=${clientId || ''}`,
     }, function(err, res) {
       if (err) {
         reject(err);

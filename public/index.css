@@ -20,6 +20,10 @@ button:hover {
 .yellow {
   background-color: gold;
 }
+.red {
+  background-color: crimson;
+  color: #ffffff;
+}
 
 .form {
   padding-left: 20px;
@@ -46,8 +50,8 @@ button:hover {
   border: none;
   border-radius: 6px;;
   padding: 0;
-  width: 80px;
-  height: 26px;
+  width: 90px;
+  height: 30px;
   line-height: 26px;
 }
 .btn-groups > button:not(:last-child) {

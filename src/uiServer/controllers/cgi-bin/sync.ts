@@ -1,7 +1,6 @@
 import path from 'path';
 import { Context, Next } from 'koa';
 import { CODE_SUCCESS, CODE_ERR_UNKNOWN } from '../../constants/code';
-import { fetchInit } from '../../services/base';
 import { exportAllRules, importAllRules } from '../../services/rules';
 import { exportAllValues, importAllValues } from '../../services/values';
 import { pushToAliOss, pullFromAliOss } from '../../services/alioss';
@@ -12,6 +11,7 @@ export default async (ctx: Context, next: Next) => {
   const { host, uiport: port } = ctx.whistleOptions.config;
   const {
     op,
+    pageId: clientId,
     accessKeyId,
     accessKeySecret,
     bucket,
@@ -22,8 +22,8 @@ export default async (ctx: Context, next: Next) => {
 
   let result;
   if (op === 'push') {
-    const allRules = await exportAllRules(hostname);
-    const allValues = await exportAllValues(hostname);
+    const allRules = await exportAllRules({ hostname });
+    const allValues = await exportAllValues({ hostname });
     result = await pushToAliOss({
       accessKeyId,
       accessKeySecret,
@@ -55,20 +55,19 @@ export default async (ctx: Context, next: Next) => {
     const rulesJSON = JSON.parse(rulesStr);
     const valuesJSON = JSON.parse(valuesStr);
     try {
-      const { clientId = '' } = await fetchInit(hostname);
-      const importRulesResult = await importAllRules(hostname, {
-        params: {
-          clientId,
-        },
+      const importRulesResult = await importAllRules({
+        hostname,
+        clientId,
+      }, {
         data: {
           rules: rulesJSON,
           replaceAll: 1,
         },
       });
-      const importValuesResult = await importAllValues(hostname, {
-        params: {
-          clientId,
-        },
+      const importValuesResult = await importAllValues({
+        hostname,
+        clientId,
+      }, {
         data: {
           rules: valuesJSON,
           replaceAll: 1,

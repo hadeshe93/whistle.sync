@@ -1,9 +1,10 @@
 {
   "name": "whistle.sync",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "",
   "scripts": {
     "dev": "tsc -w",
+    "build": "tsc",
     "postinstall": "tsc"
   },
   "devDependencies": {
